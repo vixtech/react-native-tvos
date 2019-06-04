@@ -81,6 +81,7 @@ import typeof Systrace from './Libraries/Performance/Systrace';
 import typeof ToastAndroid from './Libraries/Components/ToastAndroid/ToastAndroid';
 import typeof * as TurboModuleRegistry from './Libraries/TurboModule/TurboModuleRegistry';
 import typeof TVEventHandler from './Libraries/Components/AppleTV/TVEventHandler';
+import typeof TVMenuControl from './Libraries/Components/AppleTV/TVMenuControl';
 import typeof UIManager from './Libraries/ReactNative/UIManager';
 import typeof useColorScheme from './Libraries/Utilities/useColorScheme';
 import typeof useWindowDimensions from './Libraries/Utilities/useWindowDimensions';
@@ -388,6 +389,9 @@ module.exports = {
   },
   get TVEventHandler(): TVEventHandler {
     return require('./Libraries/Components/AppleTV/TVEventHandler');
+  },
+  get TVMenuControl() {
+    return require('./Libraries/Components/AppleTV/TVMenuControl');
   },
   get UIManager(): UIManager {
     return require('./Libraries/ReactNative/UIManager');

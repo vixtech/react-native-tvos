@@ -30,6 +30,7 @@ const {
   StyleSheet,
   Text,
   useColorScheme,
+  TVMenuControl,
   View,
   YellowBox,
 } = require('react-native');
@@ -184,6 +185,7 @@ class RNTesterApp extends React.Component<Props, RNTesterNavigationState> {
       return null;
     }
     if (this.state.openExample) {
+      TVMenuControl.enableTVMenuKey();
       const Component = RNTesterList.Modules[this.state.openExample];
       if (Component && Component.external) {
         return <Component onExampleExit={this._handleBack} />;
@@ -197,6 +199,7 @@ class RNTesterApp extends React.Component<Props, RNTesterNavigationState> {
         );
       }
     }
+    TVMenuControl.disableTVMenuKey();
     return (
       <RNTesterExampleListViaHook
         onNavigate={this._handleAction}
