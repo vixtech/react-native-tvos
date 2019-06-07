@@ -45,7 +45,7 @@ const ComponentExamples: Array<RNTesterExample> = [
   {
     key: 'InputAccessoryViewExample',
     module: require('../examples/InputAccessoryView/InputAccessoryViewExample'),
-    supportsTVOS: true,
+    supportsTVOS: false,
   },
   {
     key: 'KeyboardAvoidingViewExample',
@@ -105,7 +105,7 @@ const ComponentExamples: Array<RNTesterExample> = [
   {
     key: 'SafeAreaViewExample',
     module: require('../examples/SafeAreaView/SafeAreaViewExample'),
-    supportsTVOS: true,
+    supportsTVOS: false,
   },
   {
     key: 'ScrollViewExample',
