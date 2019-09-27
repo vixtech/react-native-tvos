@@ -35,6 +35,7 @@ import typeof Slider from './Libraries/Components/Slider/Slider';
 import typeof Switch from './Libraries/Components/Switch/Switch';
 import typeof RefreshControl from './Libraries/Components/RefreshControl/RefreshControl';
 import typeof StatusBar from './Libraries/Components/StatusBar/StatusBar';
+import typeof TabBarIOS from './Libraries/Components/TabBarIOS/TabBarIOS';
 import typeof Text from './Libraries/Text/Text';
 import typeof TextInput from './Libraries/Components/TextInput/TextInput';
 import typeof Touchable from './Libraries/Components/Touchable/Touchable';
@@ -219,6 +220,9 @@ module.exports = {
   },
   get StatusBar(): StatusBar {
     return require('./Libraries/Components/StatusBar/StatusBar');
+  },
+  get TabBarIOS(): TabBarIOS {
+    return require('./Libraries/Components/TabBarIOS/TabBarIOS');
   },
   get Text(): Text {
     return require('./Libraries/Text/Text');
