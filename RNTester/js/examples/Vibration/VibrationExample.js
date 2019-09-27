@@ -11,15 +11,17 @@
 'use strict';
 
 const React = require('react');
+const ReactNative = require('react-native');
 
 const {
   StyleSheet,
   View,
   Text,
   TouchableHighlight,
-  Vibration,
   Platform,
-} = require('react-native');
+} = ReactNative;
+
+const Vibration = Platform.isTV ? null : ReactNative.Vibration;
 
 exports.framework = 'React';
 exports.title = 'Vibration';

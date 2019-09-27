@@ -334,6 +334,8 @@ const ReactNativeViewConfig = {
     transform: {diff: require('../../Utilities/differ/matricesDiffer')},
     translateX: true,
     translateY: true,
+    tvParallaxProperties: true,
+    isTVSelectable: true,
     width: true,
     zIndex: true,
   },

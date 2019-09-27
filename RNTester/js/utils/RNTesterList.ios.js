@@ -144,12 +144,12 @@ const ComponentExamples: Array<RNTesterExample> = [
   },
   {
     key: 'TabBarIOSExample',
-    module: require('./TabBarIOSExample'),
+    module: require('../examples/TabBarIOS/TabBarIOSExample'),
     supportsTVOS: true,
   },
   {
     key: 'TabBarIOSBarStyleExample',
-    module: require('./TabBarIOSBarStyleExample'),
+    module: require('../examples/TabBarIOSBarStyle/TabBarIOSBarStyleExample'),
     supportsTVOS: false,
   },
   {
@@ -336,7 +336,7 @@ const APIExamples: Array<RNTesterExample> = [
   },
   {
     key: 'TVFocusGuideExample',
-    module: require('./TVFocusGuideExample'),
+    module: require('../examples/TVFocusGuide/TVFocusGuideExample'),
     supportsTVOS: true,
   },
   {
