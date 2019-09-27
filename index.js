@@ -279,6 +279,7 @@ module.exports = {
       'async-storage-moved',
       'AsyncStorage has been extracted from react-native core and will be removed in a future release. ' +
         "It can now be installed and imported from '@react-native-community/async-storage' instead of 'react-native'. " +
+        "Persistent storage is not supported on tvOS, your data may be removed at any point. " +
         'See https://github.com/react-native-community/react-native-async-storage',
     );
     return require('./Libraries/Storage/AsyncStorage');
