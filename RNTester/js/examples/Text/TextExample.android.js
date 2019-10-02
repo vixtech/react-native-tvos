@@ -16,7 +16,7 @@ const React = require('react');
 const TextInlineView = require('../../components/TextInlineView');
 const TextLegend = require('../../components/TextLegend');
 
-const {StyleSheet, Text, View} = require('react-native');
+const {StyleSheet, Text, View} = require('react-native-tvos');
 
 class Entity extends React.Component<{|children: React.Node|}> {
   render() {

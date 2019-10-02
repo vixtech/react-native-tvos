@@ -35,7 +35,7 @@ const {
   UIManager,
   useColorScheme,
   View,
-} = require('react-native');
+} = require('react-native-tvos');
 
 import type {RNTesterExample} from './types/RNTesterTypes';
 import type {RNTesterNavigationState} from './utils/RNTesterNavigationReducer';
