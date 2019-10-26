@@ -69,6 +69,9 @@ static std::tuple<BOOL, UIModalTransitionStyle> animationConfiguration(ModalHost
 
 static UIModalPresentationStyle presentationConfiguration(ModalHostViewProps const &props)
 {
+#if TARGET_OS_TV
+    return UIModalPresentationFullScreen;
+#else
   if (props.transparent) {
     return UIModalPresentationOverFullScreen;
   }
@@ -82,14 +85,17 @@ static UIModalPresentationStyle presentationConfiguration(ModalHostViewProps con
     case ModalHostViewPresentationStyle::OverFullScreen:
       return UIModalPresentationOverFullScreen;
   }
+#endif
 }
 
+#if !TARGET_OS_TV
 static ModalHostViewOnOrientationChangeStruct onOrientationChangeStruct(CGRect rect)
 {
   auto orientation = rect.size.width < rect.size.height ? ModalHostViewOnOrientationChangeOrientationStruct::Portrait
                                                         : ModalHostViewOnOrientationChangeOrientationStruct::Landscape;
   return {orientation};
 }
+#endif
 
 @interface RCTModalHostViewComponentView () <RCTFabricModalHostViewControllerDelegate>
 
@@ -156,9 +162,11 @@ static ModalHostViewOnOrientationChangeStruct onOrientationChangeStruct(CGRect r
 
 - (void)boundsDidChange:(CGRect)newBounds
 {
+#if !TARGET_OS_TV
   std::dynamic_pointer_cast<const ModalHostViewEventEmitter>(_eventEmitter)
       ->onOrientationChange(onOrientationChangeStruct(newBounds));
-
+#endif
+    
   if (_state != nullptr) {
     auto newState = ModalHostViewState{RCTSizeFromCGSize(newBounds.size)};
     _state->updateState(std::move(newState));

@@ -84,6 +84,15 @@ Pod::Spec.new do |s|
       sss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/ReactCommon\" \"$(PODS_ROOT)/Folly\"" }
     end
 
+    ss.subspec "modal" do |sss|
+      sss.dependency             folly_dep_name, folly_version
+      sss.compiler_flags       = folly_compiler_flags
+      sss.source_files         = "fabric/components/modal/**/*.{m,mm,cpp,h}"
+      sss.exclude_files        = "**/tests/*"
+      sss.header_dir           = "react/components/modal"
+      sss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/ReactCommon\" \"$(PODS_ROOT)/Folly\"" }
+    end
+
     ss.subspec "image" do |sss|
       sss.dependency             folly_dep_name, folly_version
       sss.compiler_flags       = folly_compiler_flags
@@ -141,7 +150,7 @@ Pod::Spec.new do |s|
 
     ss.subspec "view" do |sss|
       sss.dependency             folly_dep_name, folly_version
-      sss.dependency             "yoga",  "#{version}.React"
+      sss.dependency             "Yoga"
       sss.compiler_flags       = folly_compiler_flags
       sss.source_files         = "fabric/components/view/**/*.{m,mm,cpp,h}"
       sss.exclude_files        = "**/tests/*"
