@@ -15,7 +15,55 @@
 #import "RCTWrapperViewController.h"
 #import "UIView+React.h"
 
+#if defined(__TV_OS_VERSION_MAX_ALLOWED) && defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0
+
+// For tvOS 13.0 and higher, we need to explicitly set an animation for transitions
+// from one tab to another, otherwise the transition is choppy
+@interface TransitionAnimator: NSObject<UIViewControllerAnimatedTransitioning>
+
+@end
+
+@implementation TransitionAnimator
+
+- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext {
+    return 1.0f;
+    }
+
+- (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext     {
+    // Grab the from and to view controllers from the context
+    UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+
+    // Set our ending frame. We'll modify this later if we have to
+    CGRect endFrame = CGRectMake(0, 0, 1920, 1080);
+
+
+    toViewController.view.userInteractionEnabled = YES;
+
+    [transitionContext.containerView addSubview:toViewController.view];
+    [transitionContext.containerView addSubview:fromViewController.view];
+
+    endFrame.origin.x += 1920;
+
+    [UIView animateWithDuration:0.5 animations:^{
+        // toViewController.view.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
+        // fromViewController.view.frame = endFrame;
+        fromViewController.view.layer.opacity = 0.0;
+    } completion:^(BOOL finished) {
+        fromViewController.view.layer.opacity = 1.0;
+        [transitionContext completeTransition:YES];
+    }];
+}
+
+@end
+
+#endif
+
 @interface RCTTabBar() <UITabBarControllerDelegate>
+
+#if defined(__TV_OS_VERSION_MAX_ALLOWED) && defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0
+@property(nonatomic, strong, nullable) UITabBarAppearance *appearance;
+#endif
 
 @end
 
@@ -27,12 +75,17 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-  if ((self = [super initWithFrame:frame])) {
-    _tabController = [UITabBarController new];
-    _tabController.delegate = self;
-    [self addSubview:_tabController.view];
-  }
-  return self;
+    if ((self = [super initWithFrame:frame])) {
+      _tabController = [UITabBarController new];
+      _tabController.delegate = self;
+      [self addSubview:_tabController.view];
+        if (@available(iOS 13.0, tvOS 13.0, *)) {
+            self.appearance = [[UITabBarAppearance alloc] init];
+            [self.appearance configureWithTransparentBackground];
+            _tabController.tabBar.standardAppearance = self.appearance;
+        }
+    }
+    return self;
 }
 
 RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
@@ -128,32 +181,56 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (UIColor *)barTintColor
 {
-  return _tabController.tabBar.barTintColor;
+    if (@available(iOS 13.0, tvOS 13.0, *)) {
+        return _tabController.tabBar.standardAppearance.backgroundColor;
+    } else {
+        return _tabController.tabBar.barTintColor;
+    }
 }
 
 - (void)setBarTintColor:(UIColor *)barTintColor
 {
-  _tabController.tabBar.barTintColor = barTintColor;
+    if (@available(iOS 13.0, tvOS 13.0, *)) {
+        self.appearance.backgroundColor = barTintColor;
+        _tabController.tabBar.standardAppearance = self.appearance;
+    } else {
+        _tabController.tabBar.barTintColor = barTintColor;
+    }
 }
 
 - (UIColor *)tintColor
 {
-  return _tabController.tabBar.tintColor;
+    if (@available(iOS 13.0, tvOS 13.0, *)) {
+        return _tabController.tabBar.standardAppearance.selectionIndicatorTintColor;
+    } else {
+        return _tabController.tabBar.tintColor;
+    }
 }
 
 - (void)setTintColor:(UIColor *)tintColor
 {
-  _tabController.tabBar.tintColor = tintColor;
+    if (@available(iOS 13.0, tvOS 13.0, *)) {
+        self.appearance.selectionIndicatorTintColor = tintColor;
+        _tabController.tabBar.standardAppearance = self.appearance;
+         [self.reactSubviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger index, __unused BOOL *stop) {
+             RCTTabBarItem *tab = (RCTTabBarItem *)view;
+
+              [tab.barItem setTitleTextAttributes:@{NSForegroundColorAttributeName: self.tintColor} forState:UIControlStateSelected];
+         }];
+    } else {
+        _tabController.tabBar.tintColor = tintColor;
+    }
+    
 }
 
 - (BOOL)translucent
 {
-  return _tabController.tabBar.isTranslucent;
+    return _tabController.tabBar.isTranslucent;
 }
 
 - (void)setTranslucent:(BOOL)translucent
 {
-  _tabController.tabBar.translucent = translucent;
+    [_tabController.tabBar setTranslucent:translucent];
 }
 
 #if !TARGET_OS_TV
@@ -223,6 +300,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   return YES;
 }
 
+/*
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 {
   if (context.nextFocusedView == self) {
@@ -231,6 +309,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
     [self resignFirstResponder];
   }
 }
+ */
+
+#if defined(__TV_OS_VERSION_MAX_ALLOWED) && defined(__TVOS_13_0) && __TV_OS_VERSION_MAX_ALLOWED >= __TVOS_13_0
+- (id<UIViewControllerAnimatedTransitioning>)tabBarController:(UITabBarController *)tabBarController animationControllerForTransitionFromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
+{
+    TransitionAnimator *animator = [[TransitionAnimator alloc] init];
+    return animator;
+}
+#endif
 
 #endif
 
