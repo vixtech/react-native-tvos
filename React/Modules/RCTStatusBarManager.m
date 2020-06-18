@@ -11,7 +11,27 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
-#if !TARGET_OS_TV
+#if TARGET_OS_TV
+RCT_ENUM_CONVERTER(
+    UIStatusBarStyle,
+    (@{
+      @"default" : 0,
+      @"light-content" : 1,
+      @"dark-content" : 2
+    }),
+    0,
+    integerValue);
+
+RCT_ENUM_CONVERTER(
+    UIStatusBarAnimation,
+    (@{
+      @"none" : 0,
+      @"fade" : 1,
+      @"slide" : 2,
+    }),
+    0,
+    integerValue);
+#else
 @implementation RCTConvert (UIStatusBar)
 
 + (UIStatusBarStyle)UIStatusBarStyle:(id)json RCT_DYNAMIC
@@ -144,7 +164,7 @@ RCT_EXPORT_METHOD(getHeight : (RCTResponseSenderBlock)callback)
   } ]);
 }
 
-RCT_EXPORT_METHOD(setStyle : (NSInteger)statusBarStyle animated : (BOOL)animated)
+RCT_EXPORT_METHOD(setStyle : (UIStatusBarStyle)statusBarStyle animated : (BOOL)animated)
 {
 #if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
@@ -159,7 +179,7 @@ RCT_EXPORT_METHOD(setStyle : (NSInteger)statusBarStyle animated : (BOOL)animated
 #endif
 }
 
-RCT_EXPORT_METHOD(setHidden : (BOOL)hidden withAnimation : (NSInteger)animation)
+RCT_EXPORT_METHOD(setHidden : (BOOL)hidden withAnimation : (UIStatusBarAnimation)animation)
 {
 #if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
