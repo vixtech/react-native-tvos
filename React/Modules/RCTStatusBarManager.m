@@ -11,27 +11,7 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
-#if TARGET_OS_TV
-RCT_ENUM_CONVERTER(
-    UIStatusBarStyle,
-    (@{
-      @"default" : 0,
-      @"light-content" : 1,
-      @"dark-content" : 2
-    }),
-    0,
-    integerValue);
-
-RCT_ENUM_CONVERTER(
-    UIStatusBarAnimation,
-    (@{
-      @"none" : 0,
-      @"fade" : 1,
-      @"slide" : 2,
-    }),
-    0,
-    integerValue);
-#else
+#if !TARGET_OS_TV
 @implementation RCTConvert (UIStatusBar)
 
 + (UIStatusBarStyle)UIStatusBarStyle:(id)json RCT_DYNAMIC
@@ -164,9 +144,13 @@ RCT_EXPORT_METHOD(getHeight : (RCTResponseSenderBlock)callback)
   } ]);
 }
 
+#if TARGET_OS_TV
+RCT_EXPORT_METHOD(setStyle : (NSString *)statusBarStyle animated : (BOOL)animated)
+{
+}
+#else
 RCT_EXPORT_METHOD(setStyle : (UIStatusBarStyle)statusBarStyle animated : (BOOL)animated)
 {
-#if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -176,12 +160,16 @@ RCT_EXPORT_METHOD(setStyle : (UIStatusBarStyle)statusBarStyle animated : (BOOL)a
     [RCTSharedApplication() setStatusBarStyle:statusBarStyle animated:animated];
   }
 #pragma clang diagnostic pop
-#endif
 }
+#endif
 
+#if TARGET_OS_TV
+RCT_EXPORT_METHOD(setHidden : (BOOL)hidden withAnimation : (NSString *)animation)
+{
+}
+#else
 RCT_EXPORT_METHOD(setHidden : (BOOL)hidden withAnimation : (UIStatusBarAnimation)animation)
 {
-#if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -191,8 +179,8 @@ RCT_EXPORT_METHOD(setHidden : (BOOL)hidden withAnimation : (UIStatusBarAnimation
     [RCTSharedApplication() setStatusBarHidden:hidden withAnimation:animation];
 #pragma clang diagnostic pop
   }
-#endif
 }
+#endif
 
 RCT_EXPORT_METHOD(setNetworkActivityIndicatorVisible : (BOOL)visible)
 {
