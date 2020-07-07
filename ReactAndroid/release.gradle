@@ -99,8 +99,7 @@ afterEvaluate { project ->
 
     artifacts {
         archives(androidSourcesJar)
-        // Temporarily disabling this due to https://github.com/react-native-community/react-native-tvos/issues/7
-        //  archives(androidJavadocJar)
+        archives(androidJavadocJar)
     }
 
     version = VERSION_NAME
